@@ -2,6 +2,9 @@ import { useState } from "react";
 import React from "react";
 import "./App.css";
 
+// 🔁 Replace this with your actual backend URL
+const API_URL = "https://back-jsy5.onrender.com";
+
 const Upload = () => {
     const [file, setFile] = useState(null);
     const [fileUrl, setFileUrl] = useState("");
@@ -62,7 +65,7 @@ const Upload = () => {
         }
 
         console.log("📤 Uploading file...");
-        const response = await fetch("http://localhost:5000/upload", {
+        const response = await fetch(`${API_URL}/upload`, {
             method: "POST",
             body: formData,
         });
@@ -86,7 +89,7 @@ const Upload = () => {
         }
 
         console.log("📤 Sending file URL to backend for transcription:", fileUrl);
-        const response = await fetch("http://localhost:5000/transcribe", {
+        const response = await fetch(`${API_URL}/transcribe`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ fileUrl }),
