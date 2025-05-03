@@ -134,7 +134,7 @@ const Upload = () => {
                     </div>
                 )}
 
-                {/* Audio Preview & Transcription Button */}
+                {/* Audio Preview */}
                 {fileUrl && !transcription && (
                     <>
                         <audio controls>
@@ -145,24 +145,24 @@ const Upload = () => {
                     </>
                 )}
 
-                {/* Transcription Display + Reset */}
+                {/* Transcription Display */}
                 {transcription && (
                     <div className="transcription-box">
                         <h3>Transcription:</h3>
                         <p className="transcription-text">{transcription}</p>
                         <button
                             onClick={handleReset}
-                            className="reset-btn"
                             style={{
                                 marginTop: "1rem",
-                                backgroundColor: "#4caf50",
+                                backgroundColor: "#007bff",
                                 color: "#fff",
                                 padding: "8px 12px",
                                 border: "none",
-                                borderRadius: "4px"
+                                borderRadius: "4px",
+                                cursor: "pointer"
                             }}
                         >
-                            Upload or Record Another File
+                            Upload Another File
                         </button>
                     </div>
                 )}
