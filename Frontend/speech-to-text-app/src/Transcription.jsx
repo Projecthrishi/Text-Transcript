@@ -4,7 +4,7 @@ const Transcription = ({ transcription }) => {
   if (!transcription) {
     return (
       <div className="p-4 bg-gray-100 rounded-lg shadow-md">
-        <p className="text-gray-500">No transcription available.</p>
+        
       </div>
     );
   }

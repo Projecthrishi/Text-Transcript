@@ -44,10 +44,8 @@ const Recorder = ({ onRecordingComplete = () => {} }) => {
 
     return (
         <div className="recorder-container">
-            <h2>Audio Recorder</h2>
-            <button onClick={isRecording ? stopRecording : startRecording}>
-                {isRecording ? "Stop Recording" : "Start Recording"}
-            </button>
+            
+           
 
             {audioUrl && (
                 <audio controls>

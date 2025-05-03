@@ -10,13 +10,12 @@ const Upload = () => {
     const [mediaRecorder, setMediaRecorder] = useState(null);
     const [audioBlob, setAudioBlob] = useState(null);
 
-    // ✅ Use environment variable
-    const apiUrl = import.meta.env.VITE_API_URL;
-
+    // 🔴 Handle File Selection
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
 
+    // 🎤 Start Recording
     const startRecording = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -40,6 +39,7 @@ const Upload = () => {
         }
     };
 
+    // ⏹ Stop Recording
     const stopRecording = () => {
         if (mediaRecorder) {
             mediaRecorder.stop();
@@ -47,6 +47,7 @@ const Upload = () => {
         }
     };
 
+    // 📤 Upload File (Recorded or Selected)
     const handleUpload = async () => {
         if (!file && !audioBlob) {
             alert("Please select or record a file first!");
@@ -61,27 +62,23 @@ const Upload = () => {
         }
 
         console.log("📤 Uploading file...");
-        try {
-            const response = await fetch(`${apiUrl}/upload`, {
-                method: "POST",
-                body: formData,
-            });
+        const response = await fetch("http://localhost:5000/upload", {
+            method: "POST",
+            body: formData,
+        });
 
-            const data = await response.json();
-            if (data.fileUrl) {
-                console.log("✅ File uploaded successfully:", data.fileUrl);
-                setFileUrl(data.fileUrl);
-                alert("File uploaded successfully!");
-            } else {
-                console.error("❌ Upload Error:", data);
-                alert("File upload failed!");
-            }
-        } catch (error) {
-            console.error("❌ Network error:", error);
-            alert("Could not reach server.");
+        const data = await response.json();
+        if (data.fileUrl) {
+            console.log("✅ File uploaded successfully:", data.fileUrl);
+            setFileUrl(data.fileUrl);
+            alert("File uploaded successfully!");
+        } else {
+            console.error("❌ Upload Error:", data);
+            alert("File upload failed!");
         }
     };
 
+    // 🎙️ Transcription Request
     const handleTranscription = async () => {
         if (!fileUrl) {
             alert("No file uploaded yet!");
@@ -89,24 +86,19 @@ const Upload = () => {
         }
 
         console.log("📤 Sending file URL to backend for transcription:", fileUrl);
-        try {
-            const response = await fetch(`${apiUrl}/transcribe`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ fileUrl }),
-            });
+        const response = await fetch("http://localhost:5000/transcribe", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fileUrl }),
+        });
 
-            const data = await response.json();
-            console.log("📝 Received transcription:", data);
+        const data = await response.json();
+        console.log("📝 Received transcription:", data);
 
-            if (data.transcription) {
-                setTranscription(data.transcription);
-            } else {
-                setTranscription("No transcription available.");
-            }
-        } catch (error) {
-            console.error("❌ Transcription error:", error);
-            alert("Transcription request failed.");
+        if (data.transcription) {
+            setTranscription(data.transcription);
+        } else {
+            setTranscription("No transcription available.");
         }
     };
 
@@ -114,10 +106,12 @@ const Upload = () => {
         <div className="upload-container">
             <div className="upload-box">
                 <h2>Upload or Record Audio</h2>
-
+                
+                {/* File Upload Input */}
                 <input type="file" accept="audio/*" onChange={handleFileChange} />
                 <button onClick={handleUpload}>Upload</button>
 
+                {/* Audio Recorder Controls */}
                 <div className="record-controls">
                     {!isRecording ? (
                         <button className="record-btn" onClick={startRecording}>Start Recording</button>
@@ -126,6 +120,7 @@ const Upload = () => {
                     )}
                 </div>
 
+                {/* Audio Preview */}
                 {fileUrl && (
                     <>
                         <audio controls>
@@ -136,6 +131,7 @@ const Upload = () => {
                     </>
                 )}
 
+                {/* Transcription Display */}
                 {transcription && (
                     <div className="transcription-box">
                         <h3>Transcription:</h3>
