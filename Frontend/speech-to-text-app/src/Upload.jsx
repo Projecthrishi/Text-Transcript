@@ -102,26 +102,40 @@ const Upload = () => {
         }
     };
 
+    // 🔁 Reset All State to Upload Another File
+    const handleReset = () => {
+        setFile(null);
+        setFileUrl("");
+        setTranscription("");
+        setAudioBlob(null);
+    };
+
     return (
         <div className="upload-container">
             <div className="upload-box">
                 <h2>Upload or Record Audio</h2>
-                
+
                 {/* File Upload Input */}
-                <input type="file" accept="audio/*" onChange={handleFileChange} />
-                <button onClick={handleUpload}>Upload</button>
+                {!fileUrl && (
+                    <>
+                        <input type="file" accept="audio/*" onChange={handleFileChange} />
+                        <button onClick={handleUpload}>Upload</button>
+                    </>
+                )}
 
                 {/* Audio Recorder Controls */}
-                <div className="record-controls">
-                    {!isRecording ? (
-                        <button className="record-btn" onClick={startRecording}>Start Recording</button>
-                    ) : (
-                        <button className="stop-btn" onClick={stopRecording}>Stop Recording</button>
-                    )}
-                </div>
+                {!fileUrl && (
+                    <div className="record-controls">
+                        {!isRecording ? (
+                            <button className="record-btn" onClick={startRecording}>Start Recording</button>
+                        ) : (
+                            <button className="stop-btn" onClick={stopRecording}>Stop Recording</button>
+                        )}
+                    </div>
+                )}
 
-                {/* Audio Preview */}
-                {fileUrl && (
+                {/* Audio Preview & Transcription Button */}
+                {fileUrl && !transcription && (
                     <>
                         <audio controls>
                             <source src={fileUrl} type="audio/mp3" />
@@ -131,11 +145,25 @@ const Upload = () => {
                     </>
                 )}
 
-                {/* Transcription Display */}
+                {/* Transcription Display + Reset */}
                 {transcription && (
                     <div className="transcription-box">
                         <h3>Transcription:</h3>
                         <p className="transcription-text">{transcription}</p>
+                        <button
+                            onClick={handleReset}
+                            className="reset-btn"
+                            style={{
+                                marginTop: "1rem",
+                                backgroundColor: "#4caf50",
+                                color: "#fff",
+                                padding: "8px 12px",
+                                border: "none",
+                                borderRadius: "4px"
+                            }}
+                        >
+                            Upload or Record Another File
+                        </button>
                     </div>
                 )}
             </div>
